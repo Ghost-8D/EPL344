@@ -102,7 +102,7 @@ public class MultiThreadedTCPServer {
                 double avgRAM = ramSum / (double) conDuration;
                 ramUsageSum += avgRAM;
                 
-                System.out.println(throughput + "\t" + avgCPU + "\t" + avgRAM);
+                System.out.println(throughput + ",\t" + avgCPU + ",\t" + avgRAM);
                 
             }
             catch (SocketException se) {
@@ -123,13 +123,13 @@ public class MultiThreadedTCPServer {
         try {
         	if (args.length != 1 ) {
         		System.out.println("Error! You must enter a port number for "
-        				+ "the server (0-65535)");
+        				+ "the server (1024-65535)");
         		System.exit(1);
         	}
         	int port = Integer.parseInt(args[0]);
-        	if (port < 0 || port > 65535) {
+        	if (port < 1024 || port > 65535) {
         		System.out.println("The port you entered can not be used. "
-        				+ "Please enter a port between 0-65535");
+        				+ "Please enter a port between 1024-65535");
         		System.exit(1);
         	}
             ServerSocket socket = new ServerSocket(port);
