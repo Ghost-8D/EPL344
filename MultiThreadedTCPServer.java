@@ -16,7 +16,6 @@ public class MultiThreadedTCPServer {
 	private static int userCount = 0;
 	private static double cpuLoadSum = 0;
 	private static double ramUsageSum = 0;
-	private static boolean terminateConnection = false;
 
     private static class TCPWorker implements Runnable {
 
@@ -75,7 +74,7 @@ public class MultiThreadedTCPServer {
                 double cpuSum = 0;
                 double ramSum = 0;
                 int requestCount = 0;
-                while (!this.client.isClosed()) {
+                while (!client.isClosed()) {
 	                this.clientbuffer = reader.readLine();
 	                cpuSum += bean.getSystemCpuLoad();
 	                double totalRAM = bean.getTotalPhysicalMemorySize();
@@ -86,9 +85,6 @@ public class MultiThreadedTCPServer {
 	                requestCount++;
 	                String msg[] = this.clientbuffer.split(" ", 5);
 	                int userID = Integer.parseInt(msg[3]);
-	                if (userID == 1) {
-	                	terminateConnection = true;
-	                }
 	                String response = "WELCOME " + userID + " " + generatePayload();
 	                
 	                output.writeBytes(response + System.lineSeparator());
@@ -144,12 +140,8 @@ public class MultiThreadedTCPServer {
                         new TCPWorker(client)
                 );
                 
-                if (terminateConnection) {
-                	break;
-                }
             }
-            socket.close();
-            
+          
         } catch (BindException be) {
         	System.out.println("Address already in use (Bind failed).");
         }
