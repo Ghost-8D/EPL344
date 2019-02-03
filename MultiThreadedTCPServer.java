@@ -130,7 +130,7 @@ public class MultiThreadedTCPServer {
         	}
             ServerSocket socket = new ServerSocket(port);
 
-            System.out.println("Server listening to: " + socket.getInetAddress()
+            System.out.println("Server listening to: " + socket.getLocalSocketAddress()
             	+ ":" + socket.getLocalPort());
 
             while (true) {
