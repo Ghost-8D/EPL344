@@ -74,8 +74,7 @@ public class MultiThreadedTCPServer {
                 double cpuSum = 0;
                 double ramSum = 0;
                 int requestCount = 0;
-                while (!client.isClosed()) {
-	                this.clientbuffer = reader.readLine();
+                while ((this.clientbuffer = reader.readLine())!=null){
 	                cpuSum += bean.getSystemCpuLoad();
 	                double totalRAM = bean.getTotalPhysicalMemorySize();
 	                double freeRAM = bean.getFreePhysicalMemorySize();
