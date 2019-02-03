@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -103,7 +104,11 @@ public class MultiThreadedTCPServer {
                 
                 System.out.println(throughput + "\t" + avgCPU + "\t" + avgRAM);
                 
-            } catch (IOException e) {
+            }
+            catch (SocketException se) {
+            	System.out.println("Connection reset.");
+            }
+            catch (IOException e) {
                 e.printStackTrace();
             }
 
