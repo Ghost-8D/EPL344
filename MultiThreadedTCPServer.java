@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Date;
@@ -85,7 +86,7 @@ public class MultiThreadedTCPServer {
 	                requestCount++;
 	                String msg[] = this.clientbuffer.split(" ", 5);
 	                int userID = Integer.parseInt(msg[3]);
-	                if (userID == 0) {
+	                if (userID == 1) {
 	                	terminateConnection = true;
 	                }
 	                String response = "WELCOME " + userID + " " + generatePayload();
@@ -95,6 +96,7 @@ public class MultiThreadedTCPServer {
                 long connectionEnd = System.currentTimeMillis();
                 long conDuration = (connectionEnd - connectionStart)/1000;
                 double throughput = requestCount / (double) conDuration;
+                
                 throughputSum += throughput;
                 userCount += 1;
                 
@@ -103,6 +105,8 @@ public class MultiThreadedTCPServer {
                 
                 double avgRAM = ramSum / (double) conDuration;
                 ramUsageSum += avgRAM;
+                
+                System.out.println(throughput + "\t" + avgCPU + "\t" + avgRAM);
                 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -130,7 +134,7 @@ public class MultiThreadedTCPServer {
         	}
             ServerSocket socket = new ServerSocket(port);
 
-            System.out.println("Server listening to: " + socket.getLocalSocketAddress()
+            System.out.println("Server listening to: " + socket.getInetAddress()
             	+ ":" + socket.getLocalPort());
 
             while (true) {
@@ -144,8 +148,12 @@ public class MultiThreadedTCPServer {
                 	break;
                 }
             }
+            socket.close();
             
-        } catch (IOException e) {
+        } catch (BindException be) {
+        	System.out.println("Address already in use (Bind failed).");
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
         finally {
@@ -161,6 +169,7 @@ public class MultiThreadedTCPServer {
             
             double avgRamUsage = ramUsageSum / userCount;
             System.out.println("Average Server RAM Usage = " + avgRamUsage);
+           
         }
     }
 
